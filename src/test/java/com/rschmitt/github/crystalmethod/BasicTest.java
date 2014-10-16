@@ -2,15 +2,15 @@ package com.rschmitt.github.crystalmethod;
 
 import com.github.rschmitt.crystalmethod.CrystalMethod;
 import com.github.rschmitt.crystalmethod.Multimethod;
-import org.junit.Test;
-import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 // TODO:
 // cache dispatch fn lookups
@@ -25,8 +25,8 @@ public class BasicTest {
 
         LetterMethod letterMethod = CrystalMethod.buildMultimethod(this::dispatch, dictionary, LetterMethod.class);
 
-        assertEquals("a: 0", letterMethod.apply(0));
-        assertEquals("b: 1", letterMethod.apply(1));
+        assertEquals(letterMethod.apply(0), "a: 0");
+        assertEquals(letterMethod.apply(1), "b: 1");
     }
 
     @Test
@@ -35,8 +35,8 @@ public class BasicTest {
 
         LetterMethod letterMethod = CrystalMethod.buildMultimethod(this::dispatch, dictionary, LetterMethod.class);
 
-        Assert.assertTrue(letterMethod.getDispatchMap().isEmpty());
-        Assert.assertEquals(Letter.A, letterMethod.getDispatchFn().apply(2));
+        assertTrue(letterMethod.getDispatchMap().isEmpty());
+        assertEquals(letterMethod.getDispatchFn().apply(2), Letter.A);
     }
 
     private Letter dispatch(Integer integer) {
