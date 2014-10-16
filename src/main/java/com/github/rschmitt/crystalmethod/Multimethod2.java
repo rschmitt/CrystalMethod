@@ -1,6 +1,7 @@
 package com.github.rschmitt.crystalmethod;
 
 import java.util.Map;
+import java.util.function.Function;
 
 public interface Multimethod2<D, R, T1, T2> {
     R invoke(T1 arg1, T2 arg2);

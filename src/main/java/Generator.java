@@ -26,6 +26,8 @@ public class Generator {
         String builderClass = String.format(
                 "import java.lang.reflect.Method;%n" +
                 "import java.lang.reflect.Proxy;%n" +
+                "import java.util.Collections;%n" +
+                "import java.util.HashMap;%n" +
                 "import java.util.Map;%n" +
                 "import java.util.function.Function;%n" +
                 "%n" +
@@ -85,6 +87,7 @@ public class Generator {
     private static String generateMultimethodInterface(int count) {
         String template =
                 "import java.util.Map;%n" +
+                "import java.util.function.Function;%n" +
                 "%n" +
                 "public interface Multimethod%s<D, R, %s> {%n" +
                 "    R invoke(%s);%n" +
