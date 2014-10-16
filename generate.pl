@@ -81,7 +81,7 @@ sub gen_statics {
   my $function = gen_function($count, "R");
   my $dispatchFn = gen_function($count, "D");
   my $paramList = gen_param_list($count);
-  my $args = join(", ", map({"arg$_"} (1..$count)));
+  my $args = join ", ", map {"arg$_"} (1..$count);
   return <<HERE
     private static final ConcurrentMap<Class, Multimethod$suffix> globalMultimethods$suffix = new ConcurrentHashMap<>();
 
@@ -178,29 +178,17 @@ sub gen_multimethod {
 
 sub gen_type_vars {
   my ($count) = @_;
-  my @vars;
-  for my $i (1..$count) {
-    push @vars, "T$i";
-  }
-  return join ", ", @vars;
+  return join ", ", map {"T$_"} (1..$count);
 }
 
 sub gen_param_list {
   my $count = shift;
-  my @params;
-  for my $i (1..$count) {
-    push @params, "T$i arg$i";
-  }
-  return join ", ", @params;
+  return join ", ", map {"T$_ arg$_"} (1..$count);
 }
 
 sub suffix {
   my ($arity) = @_;
-  if ($arity == 1) {
-    return "";
-  } else {
-    return "$arity";
-  }
+  return $arity == 1 ? "" : "$arity";
 }
 
 main();
