@@ -78,11 +78,27 @@ public class Generator {
 
     private static String generateMultimethodInterface(int count) {
         String template =
+                "import java.util.Map;%n" +
+                "%n" +
                 "public interface Multimethod%s<D, R, %s> {%n" +
                 "    R invoke(%s);%n" +
+                "%n" +
+                "    default Map<D, %s> getDispatchMap() {%n" +
+                "        return null;%n" +
+                "    }%n" +
+                "%n" +
+                "    default %s getDispatchFn() {%n" +
+                "        return null;%n" +
+                "    }%n" +
                 "}%n";
 
-        return format(template, suffix(count), getTypeVariables(count), getParameterList(count));
+        String typeVariables = getTypeVariables(count);
+        return format(template, suffix(count), typeVariables, getParameterList(count), getFunction(count, "R"), getFunction(count, "D"));
+    }
+
+    private static String getFunction(int arity, String returnType) {
+        String template = "Function%s<%s, %s>";
+        return format(template, suffix(arity), getTypeVariables(arity), returnType);
     }
 
     private static String generateFunctionalInterface(int count) {
