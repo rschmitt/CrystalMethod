@@ -7,6 +7,8 @@ import static com.github.rschmitt.crystalmethod.CrystalMethod.*;
 import static org.testng.Assert.assertEquals;
 
 public class StaticTest {
+    interface GlobalMethod extends Multimethod<String, Double, Integer> {}
+
     @Test
     public void test() {
         defMulti(this::dispatch, GlobalMethod.class);
@@ -34,6 +36,4 @@ public class StaticTest {
     private int m2(double d) {
         return 2;
     }
-
-    interface GlobalMethod extends Multimethod<String, Double, Integer> {}
 }

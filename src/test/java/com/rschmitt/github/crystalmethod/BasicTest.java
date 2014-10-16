@@ -13,9 +13,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 // TODO:
-// cache dispatch fn lookups
 // implement default method delegation for andThen, compose
 public class BasicTest {
+    enum Letter { A, B }
+
+    interface LetterMethod extends Multimethod<Letter, Integer, String> {}
+
     @Test
     public void testInvocation() {
         Map<Letter, Function<Integer, String>> dictionary = new HashMap<>();
@@ -49,12 +52,5 @@ public class BasicTest {
 
     private String letterB(Integer integer) {
         return format("b: %d", integer);
-    }
-
-    enum Letter {
-        A, B
-    }
-
-    interface LetterMethod extends Multimethod<Letter, Integer, String> {
     }
 }
