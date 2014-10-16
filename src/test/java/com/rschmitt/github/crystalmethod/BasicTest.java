@@ -14,6 +14,8 @@ import static org.testng.Assert.assertTrue;
 
 // TODO:
 // implement default method delegation for andThen, compose
+// implement default dispatching value
+// implement error handling
 public class BasicTest {
     enum Letter { A, B }
 
