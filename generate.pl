@@ -4,8 +4,9 @@ use v5.16;
 use strict;
 
 sub main {
-  write_file("CrystalMethod.java", gen_builder_class());
-  for my $i (1..9) {
+  my $maxArity = 9;
+  write_file("CrystalMethod.java", gen_builder_class($maxArity));
+  for my $i (1..$maxArity) {
     my $suffix = suffix($i);
     write_file("Multimethod$suffix.java", gen_multimethod_interface($i));
     write_file("Function$suffix.java", gen_functional_interface($i)) unless $i == 1;
@@ -21,8 +22,9 @@ sub write_file {
 }
 
 sub gen_builder_class {
-  my $m = join "\n", map gen_builder_method($_), (1..9);
-  my $s = join "\n", map gen_statics($_), (1..9);
+  my $maxArity = shift;
+  my $m = join "\n", map gen_builder_method($_), (1..$maxArity);
+  my $s = join "\n", map gen_statics($_), (1..$maxArity);
   return <<HERE
 package com.github.rschmitt.crystalmethod;
 
