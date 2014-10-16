@@ -21,11 +21,8 @@ sub write_file {
 }
 
 sub gen_builder_class {
-  my @methods;
-  for my $i (1..9) {
-    push @methods, gen_builder_method($i);
-  }
-  my $m = join "\n", @methods;
+  my $m = join "\n", map gen_builder_method($_), (1..9);
+  my $s = join "\n", map gen_statics($_), (1..9);
   return <<HERE
 package com.github.rschmitt.crystalmethod;
 
@@ -34,9 +31,13 @@ import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 public class CrystalMethod {
+$s
+
 $m
 }
 HERE
@@ -68,6 +69,46 @@ sub gen_builder_method {
                     D dispatchVal = dispatchFn.apply($args);
                     return myCopy.get(dispatchVal).apply($args);
                 });
+    }
+HERE
+}
+
+sub gen_statics {
+  my $count = shift;
+  my $suffix = suffix($count);
+  my $multimethod = gen_multimethod($count);
+  my $typevars = gen_type_vars($count);
+  my $function = gen_function($count, "R");
+  my $dispatchFn = gen_function($count, "D");
+  my $paramList = gen_param_list($count);
+  my $args = join(", ", map({"arg$_"} (1..$count)));
+  return <<HERE
+    private static final ConcurrentMap<Class, Multimethod$suffix> globalMultimethods$suffix = new ConcurrentHashMap<>();
+
+    public static <T extends $multimethod, D, $typevars, R> void defMulti(
+            $dispatchFn dispatchFn,
+            Class<T> type
+    ) {
+        Multimethod$suffix multimethod = CrystalMethod.buildMultimethod(dispatchFn, new HashMap(), type);
+        globalMultimethods$suffix.putIfAbsent(type, multimethod);
+    }
+
+    public static <T extends $multimethod, D, $typevars, R> void addMethod(
+            D dispatchVal,
+            $function method,
+            Class<T> type
+    ) {
+        globalMultimethods$suffix.compute(type, (t, m) -> {
+            Map<D, $function> oldMap = m.getDispatchMap();
+            Map<D, $function> newMap = new HashMap<>();
+            newMap.putAll(oldMap);
+            newMap.put(dispatchVal, method);
+            return CrystalMethod.buildMultimethod(m.getDispatchFn(), newMap, type);
+        });
+    }
+
+    public static <T extends $multimethod, D, $typevars, R> R invoke(Class<T> type, $paramList) {
+        return (R) globalMultimethods$suffix.get(type).apply($args);
     }
 HERE
 }

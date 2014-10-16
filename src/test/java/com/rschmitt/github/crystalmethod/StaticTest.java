@@ -1,46 +1,12 @@
 package com.rschmitt.github.crystalmethod;
 
-import com.github.rschmitt.crystalmethod.CrystalMethod;
 import com.github.rschmitt.crystalmethod.Multimethod;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
-
+import static com.github.rschmitt.crystalmethod.CrystalMethod.*;
 import static org.testng.Assert.assertEquals;
 
 public class StaticTest {
-    private static final ConcurrentMap<Class, Multimethod> globalMultimethods = new ConcurrentHashMap<>();
-
-    public static <T extends Multimethod<D, T1, R>, D, T1, R> void defMulti(
-            Function<T1, D> dispatchFn,
-            Class<T> type
-    ) {
-        Multimethod multimethod = CrystalMethod.buildMultimethod(dispatchFn, new HashMap(), type);
-        globalMultimethods.putIfAbsent(type, multimethod);
-    }
-
-    public static <T extends Multimethod<D, T1, R>, D, T1, R> void addMethod(
-            D dispatchVal,
-            Function<T1, R> method,
-            Class<T> type
-    ) {
-        globalMultimethods.compute(type, (t, m) -> {
-            Map<D, Function<T1, R>> oldMap = m.getDispatchMap();
-            Map<D, Function<T1, R>> newMap = new HashMap<>();
-            newMap.putAll(oldMap);
-            newMap.put(dispatchVal, method);
-            return CrystalMethod.buildMultimethod(m.getDispatchFn(), newMap, type);
-        });
-    }
-
-    public static <T extends Multimethod<D, T1, R>, D, T1, R> R invoke(Class<T> type, T1 arg) {
-        return (R) globalMultimethods.get(type).apply(arg);
-    }
-
     @Test
     public void test() {
         defMulti(this::dispatch, GlobalMethod.class);

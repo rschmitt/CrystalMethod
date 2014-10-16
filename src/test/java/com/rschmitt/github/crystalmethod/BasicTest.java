@@ -14,8 +14,7 @@ import static org.testng.Assert.assertTrue;
 
 // TODO:
 // cache dispatch fn lookups
-// design hierarchy management features (if any), figure out where to stick them
-// covariance? contravariance?
+// implement default method delegation for andThen, compose
 public class BasicTest {
     @Test
     public void testInvocation() {
