@@ -3,6 +3,7 @@ package com.github.rschmitt.crystalmethod;
 import java.util.Map;
 import java.util.function.Function;
 
+@FunctionalInterface
 public interface Multimethod<D, R, T1> extends Function<T1, R> {
     default Map<D, Function<T1, R>> getDispatchMap() {
         return null;

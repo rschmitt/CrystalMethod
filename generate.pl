@@ -94,6 +94,7 @@ package com.github.rschmitt.crystalmethod;
 import java.util.Map;
 import java.util.function.Function;
 
+\@FunctionalInterface
 public interface $multimethod extends $function {
     default Map<D, $function> getDispatchMap() {
         return null;
