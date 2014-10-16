@@ -17,7 +17,7 @@ public class Generator {
 
         rangeClosed(1, 9).forEachOrdered(arity -> {
             String multiFnInterface = generateMultimethodInterface(arity);
-            String filename = format("Multimethod%s.java", arity == 1 ? "" : arity);
+            String filename = format("Multimethod%s.java", suffix(arity));
             writeFile(filename, multiFnInterface);
         });
 
