@@ -38,7 +38,7 @@ public class StaticTest {
     }
 
     public static <T extends Multimethod<D, R, T1>, D, R, T1> R invoke(Class<T> type, T1 arg) {
-        return (R) globalMultimethods.get(type).invoke(arg);
+        return (R) globalMultimethods.get(type).apply(arg);
     }
 
     @Test

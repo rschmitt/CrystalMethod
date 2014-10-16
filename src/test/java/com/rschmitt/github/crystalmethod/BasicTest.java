@@ -25,8 +25,8 @@ public class BasicTest {
 
         LetterMethod letterMethod = CrystalMethod.buildMultimethod(this::dispatch, dictionary, LetterMethod.class);
 
-        assertEquals("a: 0", letterMethod.invoke(0));
-        assertEquals("b: 1", letterMethod.invoke(1));
+        assertEquals("a: 0", letterMethod.apply(0));
+        assertEquals("b: 1", letterMethod.apply(1));
     }
 
     @Test

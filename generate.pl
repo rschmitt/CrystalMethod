@@ -5,16 +5,16 @@ use strict;
 
 sub main {
   write_file("CrystalMethod.java", gen_builder_class());
-  for my $i (2..9) {
+  for my $i (1..9) {
     my $suffix = suffix($i);
-    write_file("Function$suffix.java", gen_functional_interface($i));
     write_file("Multimethod$suffix.java", gen_multimethod_interface($i));
+    write_file("Function$suffix.java", gen_functional_interface($i)) unless $i == 1;
   }
 }
 
 sub write_file {
   my ($filename, $content) = @_;
-  open(my $fh, ">", "src/main/java/com/github/rschmitt/crystalmethod/gen/$filename")
+  open(my $fh, ">", "src/main/java/com/github/rschmitt/crystalmethod/$filename")
     or die "Unable to open $filename for write: $!";
   print $fh $content;
   close $fh;
@@ -82,7 +82,6 @@ sub get_args {
   return join ", ", @args;
 }
 
-# TODO MultimethodN should extend FunctionN
 sub gen_multimethod_interface {
   my $count = shift;
   my $args = gen_param_list($count);
@@ -95,9 +94,7 @@ package com.github.rschmitt.crystalmethod;
 import java.util.Map;
 import java.util.function.Function;
 
-public interface $multimethod {
-    R invoke($args);
-
+public interface $multimethod extends $function {
     default Map<D, $function> getDispatchMap() {
         return null;
     }
