@@ -57,17 +57,23 @@ public class Generator {
                 "            Map<D, Function%s<%s, R>> methods,%n" +
                 "            Class<T> type%n" +
                 "    ) {%n" +
+                "        Map<D, %s> myCopy = new HashMap<>();%n" +
+                "        myCopy.putAll(methods);%n" +
                 "        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),%n" +
                 "                new Class<?>[]{type},%n" +
                 "                (Object proxy, Method method, Object[] args) -> {%n" +
+                "                    if (\"getDispatchFn\".equals(method.getName()))%n" +
+                "                        return dispatchFn;%n" +
+                "                    else if (\"getDispatchMap\".equals(method.getName()))%n" +
+                "                        return Collections.unmodifiableMap(myCopy);%n" +
                 "                    D dispatchVal = dispatchFn.apply(%s);%n" +
-                "                    return methods.get(dispatchVal).apply(%s);%n" +
+                "                    return myCopy.get(dispatchVal).apply(%s);%n" +
                 "                });%n" +
                 "    }%n";
         String types = getTypeVariables(argCount);
         String args = getArgs(argCount);
         String count = suffix(argCount);
-        return format(template, count, types, types, count, types, count, types, args, args);
+        return format(template, count, types, types, count, types, count, types, getFunction(argCount, "R"), args, args);
     }
 
     private static String getArgs(int count) {

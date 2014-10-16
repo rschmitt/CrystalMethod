@@ -3,6 +3,7 @@ package com.rschmitt.github.crystalmethod;
 import com.github.rschmitt.crystalmethod.CrystalMethod;
 import com.github.rschmitt.crystalmethod.Multimethod;
 import org.junit.Test;
+import org.testng.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +16,9 @@ import static org.junit.Assert.assertEquals;
 // cache dispatch fn lookups
 // design hierarchy management features (if any), figure out where to stick them
 // covariance? contravariance?
-// support for static (global) multimethods?
 public class BasicTest {
     @Test
-    public void test() {
+    public void testInvocation() {
         Map<Letter, Function<Integer, String>> dictionary = new HashMap<>();
         dictionary.put(Letter.A, this::letterA);
         dictionary.put(Letter.B, this::letterB);
@@ -27,6 +27,16 @@ public class BasicTest {
 
         assertEquals("a: 0", letterMethod.invoke(0));
         assertEquals("b: 1", letterMethod.invoke(1));
+    }
+
+    @Test
+    public void testGetters() {
+        Map<Letter, Function<Integer, String>> dictionary = new HashMap<>();
+
+        LetterMethod letterMethod = CrystalMethod.buildMultimethod(this::dispatch, dictionary, LetterMethod.class);
+
+        Assert.assertTrue(letterMethod.getDispatchMap().isEmpty());
+        Assert.assertEquals(Letter.A, letterMethod.getDispatchFn().apply(2));
     }
 
     private Letter dispatch(Integer integer) {
