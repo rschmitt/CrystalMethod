@@ -51,7 +51,7 @@ sub gen_builder_method {
   my $args = get_args($count);
   return <<HERE
     \@SuppressWarnings("unchecked")
-    public static <T extends $multimethod, D, R, $typeVars> T buildMultimethod(
+    public static <T extends $multimethod, D, $typeVars, R> T buildMultimethod(
             $dispatchFn dispatchFn,
             Map<D, $function> methods,
             Class<T> type
@@ -132,7 +132,7 @@ sub gen_multimethod {
   my ($count, $returnType) = @_;
   my $suffix = suffix($count);
   my $typeVars = gen_type_vars($count);
-  return "Multimethod$suffix<D, R, $typeVars>";
+  return "Multimethod$suffix<D, $typeVars, R>";
 }
 
 sub gen_type_vars {

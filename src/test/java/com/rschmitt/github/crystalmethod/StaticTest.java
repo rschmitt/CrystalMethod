@@ -15,7 +15,7 @@ import static org.testng.Assert.assertEquals;
 public class StaticTest {
     private static final ConcurrentMap<Class, Multimethod> globalMultimethods = new ConcurrentHashMap<>();
 
-    public static <T extends Multimethod<D, R, T1>, D, R, T1> void defMulti(
+    public static <T extends Multimethod<D, T1, R>, D, T1, R> void defMulti(
             Function<T1, D> dispatchFn,
             Class<T> type
     ) {
@@ -23,7 +23,7 @@ public class StaticTest {
         globalMultimethods.putIfAbsent(type, multimethod);
     }
 
-    public static <T extends Multimethod<D, R, T1>, D, R, T1> void addMethod(
+    public static <T extends Multimethod<D, T1, R>, D, T1, R> void addMethod(
             D dispatchVal,
             Function<T1, R> method,
             Class<T> type
@@ -37,7 +37,7 @@ public class StaticTest {
         });
     }
 
-    public static <T extends Multimethod<D, R, T1>, D, R, T1> R invoke(Class<T> type, T1 arg) {
+    public static <T extends Multimethod<D, T1, R>, D, T1, R> R invoke(Class<T> type, T1 arg) {
         return (R) globalMultimethods.get(type).apply(arg);
     }
 
@@ -69,5 +69,5 @@ public class StaticTest {
         return 2;
     }
 
-    interface GlobalMethod extends Multimethod<String, Integer, Double> {}
+    interface GlobalMethod extends Multimethod<String, Double, Integer> {}
 }

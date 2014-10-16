@@ -56,6 +56,6 @@ public class BasicTest {
         A, B
     }
 
-    interface LetterMethod extends Multimethod<Letter, String, Integer> {
+    interface LetterMethod extends Multimethod<Letter, Integer, String> {
     }
 }
